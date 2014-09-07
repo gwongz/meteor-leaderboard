@@ -40,9 +40,14 @@ if (Meteor.isClient) {
 
   // event handler 
   Template.leaderboard.events({
-    // $inc is Mongo shorthand for +=5 to scores property
+    // $inc is Mongo modifier (aka Mongo update operator) for incrementing scores property
     'click input.inc': function () {
       Members.update(Session.get("selected_player"), {$inc: {score: 5}});
+    },
+    // decrement scores property by 5
+    'click input.dec': function(){
+      Members.update(Session.get("selected_player"), {$inc: {score: -5}});
+
     }
   });
 
