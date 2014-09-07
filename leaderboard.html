@@ -1,0 +1,68 @@
+<head>
+  <title>Leaderboard</title>
+</head>
+
+<body>
+  <div id="outer">
+    {{> leaderboard}}
+  </div>
+</body>
+
+
+
+<template name="leaderboard">
+
+  <div class="leaderboard">
+    {{#each members}}
+      {{> player}}
+    {{/each}}
+  </div>
+
+  {{#if selected_name}}
+  <div class="details">
+    <div class="name">{{selected_name}}</div>
+    <input type="button" class="inc" value="Give 5 points" />
+  </div>
+  {{else}}
+  <div class="none">Click a band member to select</div>
+  {{/if}}
+
+  <!-- allows player to choose sort of board -->
+  {{>order}}
+  <!-- allows player to reset scores to 0 -->
+  {{>reset}}
+  <!-- assigns random scores to every player -->
+  {{>reset_random}}
+
+
+</template>
+
+<template name="order">
+    <div class="sort_order">
+    {{#if sort_by_score}}
+    <input type="button" class="name" value="Sort by name"/>
+    {{else}}
+    <input type="button" class="score" value="Sort by score"/>
+    {{/if}}
+  </div>
+</template>
+
+<template name="player">
+  <div class="player {{selected}}">
+    <span class="name">{{name}}</span>
+    <span class="score">{{score}}</span>
+  </div>
+</template>
+
+<template name="reset">
+  <div class="reset">
+    <input type="button" class="score_reset" value="Start over"/>
+  </div>
+</template>
+
+<template name="reset_random">
+  <div class="reset_random">
+    <input type="button" class="score_random" value="Assign random scores"/>
+  </div>
+</template>
+
