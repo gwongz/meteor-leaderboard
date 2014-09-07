@@ -1,5 +1,5 @@
 // Set up a collection to contain player information. On the server,
-// it is backed by a MongoDB collection named "players".
+// it is backed by a MongoDB collection named "players" and a MongoDB collection named "members".
 
 Players = new Meteor.Collection("players");
 Members = new Meteor.Collection("members");
@@ -15,38 +15,34 @@ if (Meteor.isClient) {
   Template.order.sort_by_score = function(){
     return Session.equals('sort_choice', 'score');
   };
-  // db query 
+  // db query returns all of the players
   Template.leaderboard.players = function () {
     return Players.find({}, {sort: {score: -1, name: 1}});
   };
 
-  // db query
+  // db query returns all of the members
   // sort by descending score, breaking ties with ascending name 
   Template.leaderboard.members = function(){
-    // return Members.find({}, {sort: {score: -1, name: 1}});
     var order = Session.equals('sort_choice', 'score') ? {score: -1, name: 1} : {name: 1, score: -1};
-    // var order = Session.get('sort_by_score') ? {score: -1, name: 1} : {name: 1, score: -1};
     return Members.find({}, {sort: order});
   };
 
-  // fills in template var {{selected_name}}
+  // set {{selected_name}} to value of session variable
   Template.leaderboard.selected_name = function () {
     var member = Members.findOne(Session.get("selected_player"));
     return member && member.name;
-    // var player = Players.findOne(Session.get("selected_player"));
-    // return player && player.name;
   };
 
-  // a session variable 
+
   Template.player.selected = function () {
     return Session.equals("selected_player", this._id) ? "selected" : '';
   };
 
   // event handler 
   Template.leaderboard.events({
+    // $inc is Mongo shorthand for +=5 to scores property
     'click input.inc': function () {
       Members.update(Session.get("selected_player"), {$inc: {score: 5}});
-      // Players.update(Session.get("selected_player"), {$inc: {score: 5}});
     }
   });
 
@@ -69,19 +65,13 @@ if (Meteor.isClient) {
   Template.reset.events({
     'click .score_reset': function(){
       Meteor.call('resetScores', 0);
-      // Set the 'admin' property on the document to true
-      // {$set: {admin: true}}
 
-      // Add 2 to the 'votes' property, and add "Traz"
-      // to the end of the 'supporters' array
-      // {$inc: {votes: 2}, $push: {supporters: "Traz"}}
     }
   });
 
   Template.reset_random.events({
     'click .score_random': function(){
       Meteor.call('resetRandom');
-      // Meteor.call('resetScores', Math.floor(Random.fraction()*10)*5);
     }
   });
 
@@ -91,6 +81,7 @@ if (Meteor.isClient) {
 
 Meteor.methods({
   resetScores: function (score) {
+    // set the score property on the document to score var
     Members.update({}, 
       {$set: {score: score}},
       {multi:true});
@@ -103,10 +94,9 @@ Meteor.methods({
     });
   },
 
-      // var m = var race = RacesCollection.find({eventId: "e1"});
 });
 
-// On server startup, create some players if the database is empty.
+// On server startup, create some members if the database is empty.
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
