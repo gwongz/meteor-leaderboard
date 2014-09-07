@@ -1,17 +1,24 @@
 <head>
-  <title>Leaderboard</title>
+  <title>Lightness of Being Leaderboard</title>
 </head>
 
 <body>
   <div id="outer">
     {{> leaderboard}}
+    <!-- allows player to choose sort of board -->
+    {{>order}}
+    <!-- allows player to reset scores to 0 -->
+    {{>reset}}
+    <!-- assigns random scores to every player -->
+    {{>reset_random}}
   </div>
+
+
 </body>
 
 
 
 <template name="leaderboard">
-
   <div class="leaderboard">
     {{#each members}}
       {{> player}}
@@ -21,20 +28,11 @@
   {{#if selected_name}}
   <div class="details">
     <div class="name">{{selected_name}}</div>
-    <input type="button" class="inc" value="Give 5 points" />
+    <input type="button" class="inc" value="Give 5 points for riff excellence" />
   </div>
   {{else}}
   <div class="none">Click a band member to select</div>
   {{/if}}
-
-  <!-- allows player to choose sort of board -->
-  {{>order}}
-  <!-- allows player to reset scores to 0 -->
-  {{>reset}}
-  <!-- assigns random scores to every player -->
-  {{>reset_random}}
-
-
 </template>
 
 <template name="order">
